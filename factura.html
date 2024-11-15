@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoices</title>
+  <link href="css/tailwind.min.css" rel="stylesheet" />
+  <link href="css/style_usuario.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+
+<body class="flex flex-col min-h-screen bg-gradient-to-br from-yellow-100 via-pink-100 to-purple-100 text-gray-900">
+
+
+  <!-- Encabezado Principal -->
+  <header
+    class="bg-gradient-to-r from-purple-500 via-red-400 to-orange-400 text-white p-4 flex items-center justify-between shadow-lg">
+    <button id="dropdownButton" class="p-3 bg-white text-purple-600 rounded-full shadow-md focus:outline-none">
+      <img src="img/hamburg.svg" alt="Menu" class="w-6 h-6">
+    </button>
+    <h1 class="text-3xl font-bold">Invoices</h1>
+    <button class="p-2 bg-purple-300 hover:bg-purple-600 rounded-full focus:outline-none">
+      <img src="img/user.svg" alt="Usuario" class="w-6 h-6">
+    </button>
+  </header>
+
+
+
+
+
+  <!-- Sidebar -->
+  <aside id="dropdownContent"
+    class="fixed top-0 left-0 h-full bg-gradient-to-b from-orange-500 to-yellow-300 text-black shadow-xl w-64 transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+    <nav class="mt-16">
+      <button id="backButton"
+        class="flex items-center px-4 py-2 w-full text-left transition-colors duration-200 hover:bg-yellow-600 hover:text-black">
+        <span class="material-icons-outlined mr-2">arrow_back</span>Close
+      </button>
+      <a href="index.html"
+        class="flex items-center px-4 py-2 w-full text-left transition-colors duration-200 hover:bg-yellow-600 hover:text-black">
+        <span class="material-icons-outlined mr-2">home</span>Home
+      </a>
+      <a href="usuario.html"
+        class="flex items-center px-4 py-2 w-full text-left transition-colors duration-200 hover:bg-yellow-600 hover:text-black">
+        <span class="material-icons-outlined mr-2">people_alt</span>Users
+      </a>
+      <a href="cliente.html"
+        class="flex items-center px-4 py-2 w-full text-left transition-colors duration-200 hover:bg-yellow-600 hover:text-black">
+        <span class="material-icons-outlined mr-2">inventory</span>Client
+      </a>
+      <a href="producto.html"
+        class="flex items-center px-4 py-2 w-full text-left transition-colors duration-200 hover:bg-yellow-600 hover:text-black">
+        <span class="material-icons-outlined mr-2">receipt</span>Products
+      </a>
+    </nav>
+  </aside>
+
+
+
+
+
+  <!-- Botón flotante para abrir el modal -->
+  <button id="openModal"
+    class="fixed bottom-24 sm:bottom-28 right-5 bg-purple-300 hover:bg-purple-600 text-white p-4 rounded-full shadow-lg focus:outline-none"
+    aria-label="Abrir formulario">
+    <img src="img/addfactura.svg" alt="addfactura" />
+  </button>
+
+
+
+
+
+
+  <!-- Modal con formulario -->
+  <div id="modal" class="fixed inset-0 hidden items-center justify-center bg-gray-900 bg-opacity-50 z-20">
+    <div class="bg-gradient-to-br from-yellow-100 via-pink-100 to-purple-100 w-full max-w-md p-6 rounded-lg shadow-lg">
+      <h2 class="text-2xl font-semibold mb-6 text-gray-700">
+        Create Or Update
+      </h2>
+
+      <form id="dataForm" class="space-y-6">
+        <!-- Select para Usuarios -->
+        <div>
+          <label for="id_usuario" class="block text-lg font-medium">Seleccionar Usuario</label>
+          <select id="id_usuario" name="id_usuario" required
+            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+            <!-- <option value="">Seleccione un usuario</option> -->
+            <!-- Opciones de usuarios se llenarán dinámicamente -->
+          </select>
+        </div>
+
+        <!-- Select para Clientes -->
+        <div>
+          <label for="id_cliente" class="block text-lg font-medium">Seleccionar Cliente</label>
+          <select id="id_cliente" name="id_cliente" required
+            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+            <!-- <option value="">Seleccione un cliente</option> -->
+            <!-- Opciones de clientes se llenarán dinámicamente -->
+          </select>
+        </div>
+
+        <!-- Input para Fecha y Hora -->
+        <div>
+          <label for="fecha" class="block text-lg font-medium">Fecha y Hora</label>
+          <input type="datetime-local" id="fecha" name="fecha" required
+            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" />
+        </div>
+
+        <!-- Botón de Enviar -->
+        <button type="submit"
+          class="block w-full py-2 bg-gradient-to-r from-purple-500 via-red-400 to-orange-400 text-white font-bold rounded-lg hover:bg-indigo-700 flex items-center justify-center"
+          aria-label="Guardar">
+          Save Information
+        </button>
+      </form>
+
+      <button id="closeModal"
+        class="mt-6 block w-full py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center"
+        aria-label="Cerrar formulario">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Contenedor de tarjetas de usuarios -->
+  <main id="mainContent" class="container mx-auto my-10 px-4">
+    <div id="dataList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </main>
+
+
+
+  <!-- Contenedor de la factura como tal -->
+  <div id="facturaModal" class="hidden fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <!-- Contenedor principal del modal -->
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+      <!-- Contenido de la factura -->
+      <div id="impresion">
+        <div id="facturaEncabezado" class="mb-4">
+          <!-- Aquí se cargará el encabezado de la factura -->
+        </div>
+        <div id="facturaDetalles" class="mb-4">
+          <!-- Aquí se cargará la lista de productos -->
+        </div>
+        <p id="facturaTotal" class="text-right font-bold mb-4">
+          <!-- Aquí se mostrará el total -->
+        </p>
+      </div>
+      <!-- Contenedor de botones fuera del contenido de la factura -->
+      <div class="flex justify-center space-x-4 mt-4">
+        <button onclick="printFactura()" class="bg-blue-500 text-white px-4 py-2 rounded">
+          <img src="img/print.svg" alt="print">
+        </button>
+        <button onclick="closeModal()" class="bg-red-500 text-white px-4 py-2 rounded">
+          <img src="img/noprint.svg" alt="print">
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- Modal de Éxito -->
+  <div id="modalExito" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 id="mensajeExito" class="text-lg font-semibold"></h2>
+    </div>
+  </div>
+
+  <!-- Modal de Result ado de Edición -->
+  <div id="modalEdicion" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 id="mensajeEdicion" class="text-lg font-semibold"></h2>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación eliminar -->
+  <div id="modalEliminar" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-lg font-semibold mb-4">
+        Are you sure to delete the Invoice?
+      </h2>
+      <div class="flex justify-center">
+        <button id="btnEliminar" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+          aria-label="Eliminar usuario">
+          Delete
+        </button>
+        <button id="btnCancelar" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 ml-2"
+          aria-label="Cancelar eliminación">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pie de Página -->
+  <footer
+  class="bg-gradient-to-r from-purple-500 via-red-400 to-orange-400 text-white text-center py-4 inline-flex items-center mt-auto">
+  <p>Management system 2024 &copy; all rights reserved. Developed by
+    <a href="https://github.com/Jumaga11">
+      <img src="img/github.svg" alt="GitHub" class="w-6 h-6 inline-flex items-center"> Jumaga11
+    </a>
+  </p>
+</footer>
+
+  <script src="js/script.js"></script>
+  <script src="js/app_factura.js"></script>
+</body>
+
+</html>
